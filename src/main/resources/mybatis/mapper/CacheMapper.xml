@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.changhong.cachemanage.mapper.CacheMapper" >
+    <resultMap id="CacheResultMap" type="com.changhong.cachemanage.entity.Cache" >
+        <id column="id" property="id" jdbcType="BIGINT"/>
+        <result column="quiz" property="quiz" jdbcType="VARCHAR" />
+        <result column="answer" property="answer" jdbcType="VARCHAR" />
+    </resultMap>
+
+    <sql id="Base_Column_List" >
+        id, quiz, answer
+    </sql>
+
+    <select id="getAll" resultMap="CacheResultMap"  >
+        SELECT
+        <include refid="Base_Column_List" />
+        FROM cached
+    </select>
+
+    <select id="getOne" parameterType="java.lang.Integer" resultMap="CacheResultMap" >
+        SELECT
+        <include refid="Base_Column_List" />
+        FROM cached
+        WHERE id = #{id}
+    </select>
+
+    <select id="getCachePage" parameterType="com.changhong.cachemanage.entity.Cache" resultMap="CacheResultMap"  >
+        SELECT
+        <include refid="Base_Column_List" />
+        FROM cached
+        limit #{begin},#{limit}
+    </select>
+
+    <select id="getCacheCount"  resultType="Integer">
+        SELECT COUNT(1) FROM cached
+    </select>
+
+    <insert id="insert" parameterType="com.changhong.cachemanage.entity.Cache" >
+        INSERT INTO
+        cached
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="quiz != null">
+                quiz,
+            </if>
+            <if test="answer != null">
+                answer,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="quiz != null">
+                #{quiz},
+            </if>
+            <if test="answer != null">
+                #{answer},
+            </if>
+        </trim>
+    </insert>
+
+    <update id="update" parameterType="com.changhong.cachemanage.entity.Cache" >
+        UPDATE
+        cached
+        <set>
+            <if test="quiz != null">
+                quiz = #{quiz},
+            </if>
+            <if test="answer != null">
+                answer = #{answer},
+            </if>
+        </set>
+        WHERE
+        id = #{id}
+    </update>
+
+    <delete id="delete" parameterType="java.lang.Integer" >
+        DELETE FROM
+        cached
+        WHERE
+        id =#{id}
+    </delete>
+
+</mapper>

@@ -1,0 +1,190 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.changhong.semanticmanage.mapper.SemanticMapper" >
+    <resultMap id="SemanticResultMap" type="com.changhong.semanticmanage.entity.Semantic" >
+        <id column="id" property="id" jdbcType="BIGINT"/>
+        <result column="sentence" property="sentence" jdbcType="VARCHAR" />
+        <result column="squery" property="squery" jdbcType="VARCHAR" />
+        <result column="spellCheck" property="spellCheck" jdbcType="VARCHAR" />
+        <result column="madeChange" property="madeChange" jdbcType="BIT"/>
+        <result column="stateCode" property="stateCode" jdbcType="BIGINT"/>
+        <result column="stype" property="stype" jdbcType="VARCHAR" />
+        <result column="state" property="state" jdbcType="BIGINT" />
+        <result column="method" property="method" jdbcType="VARCHAR" />
+        <result column="stime" property="stime" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <sql id="Base_Column_List" >
+        id, sentence, squery, spellCheck, madeChange, stateCode, stype, state, method, stime
+    </sql>
+
+    <select id="getSemanticPage" parameterType="com.changhong.semanticmanage.entity.Semantic" resultMap="SemanticResultMap" >
+        SELECT
+        <include refid="Base_Column_List" />
+        FROM semantic
+        <where>
+            1 = 1
+            <if test="stime!=null">
+                AND stime = #{stime}
+            </if>
+            <if test="method!=null">
+                AND method = #{method}
+            </if>
+            <if test="stype!=null">
+                AND stype = #{stype}
+            </if>
+            <if test="state!=null">
+                AND state = #{state}
+            </if>
+        </where>
+        limit #{begin},#{limit}
+    </select>
+
+    <select id="getSemanticCount" parameterType="com.changhong.semanticmanage.entity.Semantic" resultType="Integer">
+        SELECT COUNT(1) FROM semantic
+        <where>
+            1 = 1
+            <if test="stime!=null">
+                AND stime = #{stime}
+            </if>
+            <if test="method!=null">
+                AND method = #{method}
+            </if>
+            <if test="stype!=null">
+                AND stype = #{stype}
+            </if>
+            <if test="state!=null">
+                AND state = #{state}
+            </if>
+        </where>
+    </select>
+
+    <insert id="insertAll" parameterType="com.changhong.semanticmanage.entity.Semantic" >
+        insert into semantic
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="sentence != null">
+                sentence,
+            </if>
+            <if test="squery != null">
+                squery,
+            </if>
+            <if test="spellCheck != null">
+                spellCheck,
+            </if>
+            <if test="madeChange != null">
+                madeChange,
+            </if>
+            <if test="stateCode != null">
+                stateCode,
+            </if>
+            <if test="stype != null">
+                stype,
+            </if>
+            <if test="state != null">
+                state,
+            </if>
+            <if test="method != null">
+                method,
+            </if>
+            <if test="stime != null">
+                stime,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="sentence != null">
+                #{sentence},
+            </if>
+            <if test="squery != null">
+                #{squery},
+            </if>
+            <if test="spellCheck != null">
+                #{spellCheck},
+            </if>
+            <if test="madeChange != null">
+                #{madeChange},
+            </if>
+            <if test="stateCode != null">
+                #{stateCode},
+            </if>
+            <if test="stype != null">
+                #{stype},
+            </if>
+            <if test="state != null">
+                #{state},
+            </if>
+            <if test="method != null">
+                #{method},
+            </if>
+            <if test="stime != null">
+                #{stime},
+            </if>
+        </trim>
+    </insert>
+
+    <update id="update" parameterType="com.changhong.semanticmanage.entity.Semantic">
+        update semantic
+        <set>
+            <if test="sentence != null">
+                sentence = #{sentence},
+            </if>
+            <if test="squery != null">
+                squery = #{squery},
+            </if>
+            <if test="spellCheck != null">
+                spellCheck = #{spellCheck},
+            </if>
+            <if test="madeChange != null">
+                madeChange = #{madeChange},
+            </if>
+            <if test="stateCode != null">
+                stateCode = #{stateCode},
+            </if>
+            <if test="stype != null">
+                stype = #{stype},
+            </if>
+            <if test="state != null">
+                state = #{state},
+            </if>
+            <if test="method != null">
+                method = #{method},
+            </if>
+            <if test="stime != null">
+                stime = #{stime},
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+
+    <!--<select id="getOne" parameterType="java.lang.Long" resultMap="BaseResultMap" >
+        SELECT
+        <include refid="Base_Column_List" />
+        FROM users
+        WHERE id = #{id}
+    </select>
+
+    <insert id="insert" parameterType="com.changhong.semanticmanage.entity.Semantic" >
+        INSERT INTO
+        users
+        (userName,passWord,user_sex)
+        VALUES
+        (#{userName}, #{passWord}, #{userSex})
+    </insert>
+
+    <update id="update" parameterType="com.neo.entity.UserEntity" >
+        UPDATE
+        users
+        SET
+        <if test="userName != null">userName = #{userName},</if>
+        <if test="passWord != null">passWord = #{passWord},</if>
+        nick_name = #{nickName}
+        WHERE
+        id = #{id}
+    </update>
+
+    <delete id="delete" parameterType="java.lang.Long" >
+        DELETE FROM
+        users
+        WHERE
+        id =#{id}
+    </delete>-->
+</mapper>
