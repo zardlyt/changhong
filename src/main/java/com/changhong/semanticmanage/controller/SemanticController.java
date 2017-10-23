@@ -20,7 +20,7 @@ public class SemanticController {
     @RequestMapping(value = "/query")
     public String getSemanticPage(){
         Semantic s = new Semantic();
-        s.setPageNo(2);
+        s.setPageNo(1);
         PageBean<Semantic> pageBean = semanticService.getSemanticPage(s);
         List<Semantic> list = pageBean.getList();
         Semantic semantic = list.get(0);
