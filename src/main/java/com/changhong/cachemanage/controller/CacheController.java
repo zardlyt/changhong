@@ -7,6 +7,8 @@ import com.changhong.semanticmanage.entity.Semantic;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -58,6 +60,16 @@ public class CacheController {
         cache.setQuiz("大话");
         cache.setAnswer("西游");
         cacheService.insert(cache);
+        return "";
+    }
+
+    @RequestMapping(value = "/upload")
+    public String upload(@RequestParam(value = "upfile") MultipartFile file){
+        if(file==null) return null;
+        String name = file.getOriginalFilename();
+        long size = file.getSize();
+        if(name==null || ("").equals(name) && size==0) return null;
+        cacheService.upload(file);
         return "";
     }
 

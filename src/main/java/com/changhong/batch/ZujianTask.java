@@ -31,7 +31,7 @@ public class ZujianTask {
     SemanticMapper semanticMapper;
 
 
-    @Scheduled(fixedRate = 1000000000)
+    //@Scheduled(fixedRate = 1000000000)
     public void httpTask() throws Exception {
         Date date = new Date();
         SimpleDateFormat format = new SimpleDateFormat("yyyyMMdd");

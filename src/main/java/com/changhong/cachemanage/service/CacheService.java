@@ -10,11 +10,20 @@ import com.changhong.semanticmanage.mapper.SemanticMapper;
 import com.changhong.utils.JsonUtils;
 import net.sf.json.util.JSONUtils;
 import org.apache.commons.collections.map.HashedMap;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.xssf.usermodel.XSSFCell;
+import org.apache.poi.xssf.usermodel.XSSFRow;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.apache.tomcat.jni.File;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.*;
 
 /**
@@ -89,6 +98,32 @@ public class CacheService {
 
     public void update(Cache cache){
         cacheMapper.update(cache);
+    }
+
+    public void upload(MultipartFile file){
+        InputStream in = null;
+        XSSFWorkbook workbook = null;
+        try {
+            in = file.getInputStream();
+            workbook = new XSSFWorkbook(in);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        XSSFSheet sheet = workbook.getSheetAt(0);
+        XSSFRow row = null;
+        XSSFCell cell = null;
+        int rowNum = sheet.getLastRowNum();
+        for(int i = 0;i<=rowNum;i++) {
+            row = sheet.getRow(i);
+            Cell quiz = row.getCell(0);
+            Cell answer = row.getCell(1);
+            String nquiz = quiz==null?null:quiz.getStringCellValue();
+            String nanswer = answer==null?null:answer.getStringCellValue();
+            Cache cache = new Cache();
+            cache.setQuiz(nquiz);
+            cache.setAnswer(nanswer);
+            cacheMapper.insert(cache);
+        }
     }
 
     public void deleteAll(){
