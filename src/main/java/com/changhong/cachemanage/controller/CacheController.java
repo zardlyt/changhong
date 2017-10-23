@@ -20,8 +20,8 @@ public class CacheController {
     CacheService cacheService;
     @RequestMapping(value = "/query")
     public String getAll(){
-        int c = 3;
-        PageBean<Cache> pageBean = cacheService.getAll(c);
+        int e = 3;
+        PageBean<Cache> pageBean = cacheService.getAll(e);
         List<Cache> list = pageBean.getList();
         Cache cache = list.get(0);
         System.out.print(cache.getQuiz());
