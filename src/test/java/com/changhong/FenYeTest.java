@@ -99,15 +99,5 @@ public class FenYeTest {
     }
     @Test
     public void test2(){
-        List<Semantic> list = semanticMapper.getAll();
-        for(int i=0;i<list.size();i++){
-            Semantic semantic = list.get(i);
-            String str = JsonUtils.toJsonString(semantic);
-            String sentence = semantic.getSentence();
-            Map<String,String> map = new HashMap<String,String>();
-
-            map.put(sentence,"");
-            redisUtil.hmset("semantic"+i,map);
-        }
     }
 }
