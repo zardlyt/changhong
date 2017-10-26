@@ -1,17 +1,19 @@
 package com.changhong.cachemanage.entity;
 
+import org.apache.poi.hssf.record.formula.functions.T;
+
 import java.util.List;
 import java.util.Map;
 
 /**
  * Created by Administrator on 2017/10/20.
  */
-public class PageInfo {
+public class PageInfo<T> {
     private int page; //当前页数
     private int totalCount;  //总记录数
     private int totalPage;  //总页数
     private int limit;   //每页显示的记录数
-    private List<Map> list; //每页显示数据记录的集合；
+    private List<T> list; //每页显示数据记录的集合；
 
     public int getPage() {
         return page;
@@ -45,11 +47,11 @@ public class PageInfo {
         this.limit = limit;
     }
 
-    public List<Map> getList() {
+    public List<T> getList() {
         return list;
     }
 
-    public void setList(List<Map> list) {
+    public void setList(List<T> list) {
         this.list = list;
     }
 }

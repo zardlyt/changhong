@@ -10,6 +10,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import java.util.HashMap;
 import java.util.List;
@@ -20,6 +21,7 @@ import static org.eclipse.jdt.internal.compiler.parser.Parser.name;
 /**
  * Created by Administrator on 2017/10/17.
  */
+@Component
 public class FenYeTest {
 
     /*@Autowired
@@ -37,67 +39,16 @@ public class FenYeTest {
     SemanticMapper semanticMapper;
 
     @Test
-    public void test() throws JSONException {
-
-        JSONObject json = new JSONObject();
-        json.put("start_time",1120752000);
-        json.put("end_time",1508224667);
-        json.put("type",1);
-        json.put("filter","{}");
-        json.put("page",1);
-        json.put("limit",20);
-
-        String result = HttpUtil.doPost("http://emotibot12.changhong.com/controller.php/record",json.toString());
-        System.out.print(result);
-        Map<String,Object> map = JsonUtils.toMap(result);
-        String data = (String) map.get("data");
-        List<Map> list = JsonUtils.toListBean(data,Map.class);
-        for(Map ma:list){
-            Object object = ma.get("answer");
-            String answer = object.toString();
-            if(answer.contains("semantic")){
-                String user_q = (String) ma.get("user_q");
-                String result1 = HttpUtil.doPost("http://emotibot14.changhong.com/api/ApiKey/spellcheck/spellcheck.php?sentence="+user_q);
-                List<Map> list1 = JsonUtils.toListBean(result1,Map.class);
-                Map map1 = list1.get(0);
-                String query = (String) map1.get("query");
-                String spellCheck = (String) map1.get("spellCheck");
-                Boolean madeChange = (Boolean) map1.get("madeChange");
-                Integer stateCode = (Integer) map1.get("stateCode");
-                List list2 = (List) map1.get("type");
-                String type = (String) list2.get(0);
-            }
+    public void test() {
+        for(int i=0;i<20;i++){
+            redisUtil.set("semantic:提问"+i,"回答");
         }
     }
-    @Test
-    public void test1() throws JSONException {
-        String result1 = HttpUtil.doGet("http://emotibot14.changhong.com/api/ApiKey/spellcheck/spellcheck.php?sentence=CCTV5 ");
-        System.out.print(result1);
-        /*String name = HttpUtil.doPost("http://emotibot14.changhong.com/api/ApiKey/spellcheck/spellcheck.php?sentence=我要看半月传");
-        List<Map> list = JsonUtils.toListBean(name,Map.class);
-        Map map = list.get(0);
-        String query = (String) map.get("query");
-        String spellCheck = (String) map.get("spellCheck");
-        Boolean madeChange = (Boolean) map.get("madeChange");
-        Integer stateCode = (Integer) map.get("stateCode");
-        List list1 = (List) map.get("type");
-        String type = (String) list1.get(0);
-        System.out.println(query);
-        System.out.println(spellCheck);
-        System.out.println(madeChange);
-        System.out.println(stateCode);
-        System.out.println(type);*/
-        /*JSONObject json = new JSONObject();
-        json.put("start_time",1120752000);
-        json.put("end_time",1508224667);
-        json.put("type",1);
-        json.put("filter","{}");
-        json.put("page",1);
-        json.put("limit",20);
 
-        String result = HttpUtil.doPost("http://emotibot12.changhong.com/controller.php/record",json.toString());*/
+    public static void main(String[] args){
+        for(int i=0;i<20;i++){
+
+        }
     }
-    @Test
-    public void test2(){
-    }
+
 }

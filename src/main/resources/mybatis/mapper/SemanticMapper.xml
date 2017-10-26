@@ -11,7 +11,7 @@
         <result column="stype" property="stype" jdbcType="VARCHAR" />
         <result column="state" property="state" jdbcType="BIGINT" />
         <result column="method" property="method" jdbcType="VARCHAR" />
-        <result column="stime" property="stime" jdbcType="VARCHAR"/>
+        <result column="stime" property="stime" jdbcType="TIMESTAMP"/>
     </resultMap>
 
     <sql id="Base_Column_List" >
@@ -24,9 +24,6 @@
         FROM semantic
         <where>
             1 = 1
-            <if test="stime!=null">
-                AND stime = #{stime}
-            </if>
             <if test="method!=null">
                 AND method = #{method}
             </if>
@@ -35,6 +32,9 @@
             </if>
             <if test="state!=null">
                 AND state = #{state}
+            </if>
+            <if test="day!=null">
+                AND DATE_SUB(CURDATE(), INTERVAL #{day} DAY) &lt;= DATE(stime)
             </if>
         </where>
         limit #{begin},#{limit}
@@ -44,9 +44,6 @@
         SELECT COUNT(1) FROM semantic
         <where>
             1 = 1
-            <if test="stime!=null">
-                AND stime = #{stime}
-            </if>
             <if test="method!=null">
                 AND method = #{method}
             </if>
@@ -56,10 +53,13 @@
             <if test="state!=null">
                 AND state = #{state}
             </if>
+            <if test="day!=null">
+                AND DATE_SUB(CURDATE(), INTERVAL #{day} DAY) &lt;= DATE(stime)
+            </if>
         </where>
     </select>
 
-    <insert id="insertAll" parameterType="com.changhong.semanticmanage.entity.Semantic" >
+    <insert id="insert" parameterType="com.changhong.semanticmanage.entity.Semantic" >
         insert into semantic
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="sentence != null">

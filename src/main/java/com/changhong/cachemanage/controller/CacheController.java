@@ -1,6 +1,7 @@
 package com.changhong.cachemanage.controller;
 
 import com.changhong.cachemanage.entity.Cache;
+import com.changhong.cachemanage.entity.PageInfo;
 import com.changhong.cachemanage.service.CacheService;
 import com.changhong.semanticmanage.entity.PageBean;
 import com.changhong.semanticmanage.entity.Semantic;
@@ -8,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
@@ -15,67 +17,68 @@ import java.util.List;
 /**
  * Created by Administrator on 2017/10/18.
  */
-@Controller
+@RestController
 @RequestMapping(value = "/cache")
 public class CacheController {
     @Autowired
     CacheService cacheService;
-    @RequestMapping(value = "/query")
-    public String getAll(){
-        int e = 3;
-        PageBean<Cache> pageBean = cacheService.getAll(e);
-        List<Cache> list = pageBean.getList();
-        Cache cache = list.get(0);
-        System.out.print(cache.getQuiz());
-        return "";
+    @RequestMapping(value = "/custom/query")
+    public PageBean<Cache> getCachePage(@RequestParam(value="page",required=false,defaultValue = "1") Integer page){
+        PageBean<Cache> pageBean = cacheService.getCachePage(page);
+        return pageBean;
     }
 
-    @RequestMapping(value = "/edit")
-    public String getOne(){
-        int i = 11;
-        Cache cache = cacheService.getOne(i);
-        System.out.print(cache.getQuiz());
-        return "";
+    @RequestMapping(value = "/custom/edit")
+    public Cache getOne(@RequestParam(value="id",required=false,defaultValue = "1") Integer id){
+        Cache cache = cacheService.getOne(id);
+        return cache;
     }
 
-    @RequestMapping(value = "/delete")
-    public String delete(){
-        int i = 14;
-        cacheService.delete(i);
-        return "";
+    @RequestMapping(value = "/custom/delete")
+    public void delete(@RequestParam(value="id",required=false,defaultValue = "1") Integer id){
+        cacheService.delete(id);
     }
 
-    @RequestMapping(value = "/update")
-    public String update(){
+    @RequestMapping(value = "/custom/update")
+    public void update(@RequestParam(value="id",required=false,defaultValue = "1") Integer id,@RequestParam(value="quiz", required=false) String quiz,@RequestParam(value="answer", required=false) String answer){
         Cache cache = new Cache();
-        cache.setQuiz("泉水");
-        cache.setId(11);
+        cache.setQuiz(quiz);
+        cache.setAnswer(answer);
+        cache.setId(id);
         cacheService.update(cache);
-        return "";
     }
 
-    @RequestMapping(value = "/insert")
-    public String insert(){
+    @RequestMapping(value = "/custom/insert")
+    public void insert(@RequestParam(value="quiz", required=false) String quiz,@RequestParam(value="answer", required=false) String answer){
         Cache cache = new Cache();
-        cache.setQuiz("大话");
-        cache.setAnswer("西游");
+        cache.setQuiz(quiz);
+        cache.setAnswer(answer);
         cacheService.insert(cache);
-        return "";
     }
 
-    @RequestMapping(value = "/upload")
-    public String upload(@RequestParam(value = "upfile") MultipartFile file){
-        if(file==null) return null;
+    @RequestMapping(value = "/custom/upload")
+    public void upload(@RequestParam(value = "upfile", required=false) MultipartFile file){
+        //if(file==null) return null;
         String name = file.getOriginalFilename();
         long size = file.getSize();
-        if(name==null || ("").equals(name) && size==0) return null;
+        //if(name==null || ("").equals(name) && size==0) return null;
         cacheService.upload(file);
-        return "";
     }
 
-    @RequestMapping(value = "/deleteAll")
-    public String deleteAll(){
-        return "";
+    @RequestMapping(value = "/log/deleteAll")
+    public void deleteAll(){
+        cacheService.deleteAll();
+    }
+
+    @RequestMapping(value = "/log/delete")
+    public void logDelete(@RequestParam(value = "key", required=false)String key){
+        cacheService.logDelete(key);
+    }
+
+    @RequestMapping(value = "/log/query")
+    public Cache logQurey(@RequestParam(value="key", required=false) String key){
+        Cache cache = cacheService.logQuery(key);
+        return cache;
     }
 
 }

@@ -37,7 +37,7 @@ public class ZujianTask {
         SimpleDateFormat format = new SimpleDateFormat("yyyyMMdd");
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         String sDate = formatter.format(date);//当天
-        String sYeDate = addDateOneDay(sDate, -30);//昨天
+        String sYeDate = addDateOneDay(sDate, -28);//昨天
         String sdate = dateToStamp(sDate);
         String syedate = dateToStamp(sYeDate);
         String start_time = syedate.substring(0,10);
@@ -48,19 +48,21 @@ public class ZujianTask {
         json.put("end_time",end_time);
         json.put("type",1);
         json.put("filter","{}");
-        json.put("page",2);
-        json.put("limit",500);
+        json.put("page",1);
+        json.put("limit",1);
         String result = HttpUtil.doPost("http://emotibot12.changhong.com/controller.php/record",json.toString());
-        System.out.print(result);
         Map<String,Object> map = JsonUtils.toMap(result);
         String total_size = (String) map.get("total_size");
-        System.out.println(total_size);
-        String data = (String) map.get("data");
+        json.put("limit",Integer.parseInt(total_size));
+        String fresult = HttpUtil.doPost("http://emotibot12.changhong.com/controller.php/record",json.toString());
+        Map<String,Object> fmap = JsonUtils.toMap(fresult);
+        String data = (String) fmap.get("data");
         List<Map> list = JsonUtils.toListBean(data,Map.class);
         for(Map ma:list){
             Object object = ma.get("answer");
             String answer = object.toString();
             if(answer.contains("semantic")){
+                String created_time = (String) ma.get("created_time");
                 String user_q = (String) ma.get("user_q");
                 String user_a = user_q.trim();
                 String result1 = HttpUtil.doGet("http://emotibot14.changhong.com/api/ApiKey/spellcheck/spellcheck.php?sentence="+user_a);
@@ -83,12 +85,13 @@ public class ZujianTask {
                     semantic.setStype(type);
                     semantic.setState(0);
                     semantic.setMethod("离线");
-                    semantic.setStime(sDate);
-                    semanticMapper.insertAll(semantic);
+                    semantic.setStime(Timestamp.valueOf(created_time));
+                    semanticMapper.insert(semantic);
                 }
             }
         }
     }
+
     public static String dateToStamp(String s) throws ParseException {
         String res;
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");

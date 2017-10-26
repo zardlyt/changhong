@@ -16,12 +16,21 @@ public class Semantic {
     private String stype;
     private Integer state;
     private String method;
-    private String stime;
+    private Timestamp stime;
 
 
     private Integer pageNo = 1;
     private Integer begin;
     private Integer limit;
+    private Integer day;
+
+    public Integer getDay(Integer day) {
+        return this.day;
+    }
+
+    public void setDay(Integer day) {
+        this.day = day;
+    }
 
     public Integer getPageNo() {
         return pageNo;
@@ -119,11 +128,11 @@ public class Semantic {
         this.method = method;
     }
 
-    public String getStime() {
+    public Timestamp getStime() {
         return stime;
     }
 
-    public void setStime(String stime) {
+    public void setStime(Timestamp stime) {
         this.stime = stime;
     }
 }

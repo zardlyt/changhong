@@ -24,6 +24,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
 import java.util.*;
 
 /**
@@ -35,7 +36,7 @@ public class CacheService {
     CacheMapper cacheMapper;
     @Autowired
     RedisUtil redisUtil;
-    public PageBean<Cache> getAll(int i){
+    public PageBean<Cache> getCachePage(int i){
         PageBean<Cache> pageBean = new PageBean<Cache>();
         Cache cache = new Cache();
         int page = i;
@@ -48,7 +49,6 @@ public class CacheService {
         int totalPage=0;
         if(totalCount % limit ==0){
             totalPage=totalCount/limit;
-
         }else {
             totalPage= totalCount/limit +1;
         }
@@ -59,29 +59,6 @@ public class CacheService {
         List<Cache> list = cacheMapper.getCachePage(cache);
         pageBean.setList(list);
         return pageBean;
-        /*Long count = redisUtil.llen("semantic");
-        int totalCount = count.intValue();
-        int limit = 5;
-        int begin = (i-1)*limit;
-        List<String> idlist = redisUtil.lrange("semantic",begin,limit);
-        PageInfo pageInfo = new PageInfo();
-        pageInfo.setLimit(limit);
-        pageInfo.setPage(i);
-        pageInfo.setLimit(totalCount);
-        int totalPage=0;
-        if(totalCount % limit ==0){
-            totalPage=totalCount/limit;
-
-        }else {
-            totalPage= totalCount/limit +1;
-        }
-        pageInfo.setTotalPage(totalPage);
-        List<Map> list = new ArrayList<Map>();
-        for(String id: idlist){
-            Map<String,String> map = redisUtil.hgetall("semantic"+id);
-            list.add(map);
-        }
-        pageInfo.setList(list);*/
     }
 
     public Cache getOne(int i){
@@ -113,7 +90,7 @@ public class CacheService {
         XSSFRow row = null;
         XSSFCell cell = null;
         int rowNum = sheet.getLastRowNum();
-        for(int i = 0;i<=rowNum;i++) {
+        for(int i = 0;i<rowNum;i++) {
             row = sheet.getRow(i);
             Cell quiz = row.getCell(0);
             Cell answer = row.getCell(1);
@@ -127,8 +104,60 @@ public class CacheService {
     }
 
     public void deleteAll(){
+        Set<String> set = redisUtil.keys("semantic"+"*");
+        Iterator<String> it = set.iterator();
+        while(it.hasNext()){
+            String keyStr = it.next();
+            redisUtil.del(keyStr);
+        }
         List<Cache> list = cacheMapper.getAll();
-      /*  Set<String> set = redisUtil.keys("semantic"+"*");
+        for (Cache ca:list){
+            String quiz = ca.getQuiz();
+            String answer = ca.getAnswer();
+            String key = "semantic:"+quiz+"5a200ce8e6ec3a6506030e54ac3b970e";
+            redisUtil.set(key,answer);
+        }
+    }
+
+    public void logDelete(String str){
+        String key = "semantic:"+str+"5a200ce8e6ec3a6506030e54ac3b970e";
+        redisUtil.del(key);
+    }
+
+    public Cache logQuery(String key){
+        String quiz = "semantic:"+key+"5a200ce8e6ec3a6506030e54ac3b970e";
+        String answer = redisUtil.get(quiz);
+        Cache cache = new Cache();
+        cache.setQuiz(key);
+        cache.setAnswer(answer);
+        return cache;
+    }
+}
+/*Long count = redisUtil.llen("semantic");
+        int totalCount = count.intValue();
+        int limit = 5;
+        int begin = (i-1)*limit;
+        List<String> idlist = redisUtil.lrange("semantic",begin,limit);
+        PageInfo pageInfo = new PageInfo();
+        pageInfo.setLimit(limit);
+        pageInfo.setPage(i);
+        pageInfo.setLimit(totalCount);
+        int totalPage=0;
+        if(totalCount % limit ==0){
+            totalPage=totalCount/limit;
+
+        }else {
+            totalPage= totalCount/limit +1;
+        }
+        pageInfo.setTotalPage(totalPage);
+        List<Map> list = new ArrayList<Map>();
+        for(String id: idlist){
+            Map<String,String> map = redisUtil.hgetall("semantic"+id);
+            list.add(map);
+        }
+        pageInfo.setList(list);*/
+
+/*  Set<String> set = redisUtil.keys("semantic"+"*");
         Iterator<String> it = set.iterator();
         while(it.hasNext()){
             String keyStr = it.next();
@@ -155,5 +184,3 @@ public class CacheService {
             redisUtil.rpush("semantic",String.valueOf(i));
             redisUtil.hmset("semantic"+":"+i,map);
         }*/
-    }
-}

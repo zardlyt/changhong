@@ -17,7 +17,7 @@ public interface SemanticMapper {
 
     public int getSemanticCount(Semantic semantic);
 
-    public void insertAll(Semantic semantic);
+    public void insert(Semantic semantic);
 
     public void update(Semantic semantic);
 }
