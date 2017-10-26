@@ -36,10 +36,9 @@ public class CacheService {
     CacheMapper cacheMapper;
     @Autowired
     RedisUtil redisUtil;
-    public PageBean<Cache> getCachePage(int i){
+    public PageBean<Cache> getCachePage(Cache cache){
         PageBean<Cache> pageBean = new PageBean<Cache>();
-        Cache cache = new Cache();
-        int page = i;
+        int page = cache.getPageNo();
         pageBean.setPage(page);
         int limit = 5;
         pageBean.setLimit(limit);
