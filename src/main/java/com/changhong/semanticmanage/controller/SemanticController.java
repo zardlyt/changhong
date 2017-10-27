@@ -4,6 +4,7 @@ import com.changhong.exceptionhandle.RestResult;
 import com.changhong.exceptionhandle.RestResultGenerator;
 import com.changhong.semanticmanage.entity.PageBean;
 import com.changhong.semanticmanage.entity.Semantic;
+import com.changhong.semanticmanage.entity.Synonym;
 import com.changhong.semanticmanage.service.SemanticService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -46,6 +47,9 @@ public class SemanticController {
     @RequestMapping(value = "/examine")
     public RestResult examine(@RequestParam(value = "state",required=false)Integer state,@RequestParam(value = "id",required=false,defaultValue = "1")Integer id,@RequestParam(value = "spellCheck",required=false)String spellCheck,@RequestParam(value = "query",required=false)String query){
         Semantic semantic = new Semantic();
+        semantic.setId(id);
+        semantic.setState(state);
+        Synonym synonym = new Synonym();
         semanticService.update(semantic);
         return RestResultGenerator.genSuccessResult();
     }
@@ -62,6 +66,9 @@ public class SemanticController {
     @RequestMapping(value = "/add")
     public RestResult add(@RequestParam(value = "state",required=false)Integer state,@RequestParam(value = "id",required=false,defaultValue = "1")Integer id,@RequestParam(value = "spellCheck",required=false)String spellCheck,@RequestParam(value = "query",required=false)String query){
         Semantic semantic = new Semantic();
+        semantic.setId(id);
+        semantic.setState(state);
+        Synonym synonym = new Synonym();
         semanticService.update(semantic);
         return RestResultGenerator.genSuccessResult();
     }
