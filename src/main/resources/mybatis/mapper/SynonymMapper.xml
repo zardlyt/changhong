@@ -1,16 +1,51 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.changhong.semanticmanage.mapper.SynonymMapper" >
-    <resultMap id="SemanticResultMap" type="com.changhong.semanticmanage.entity.Semantic" >
+    <resultMap id="SynonymResultMap" type="com.changhong.semanticmanage.entity.Synonym" >
         <id column="id" property="id" jdbcType="BIGINT"/>
-        <result column="sentence" property="sentence" jdbcType="VARCHAR" />
-        <result column="squery" property="squery" jdbcType="VARCHAR" />
-        <result column="spellCheck" property="spellCheck" jdbcType="VARCHAR" />
-        <result column="madeChange" property="madeChange" jdbcType="BIT"/>
-        <result column="stateCode" property="stateCode" jdbcType="BIGINT"/>
-        <result column="stype" property="stype" jdbcType="VARCHAR" />
-        <result column="state" property="state" jdbcType="BIGINT" />
-        <result column="method" property="method" jdbcType="VARCHAR" />
-        <result column="stime" property="stime" jdbcType="TIMESTAMP"/>
+        <result column="level1" property="level1" jdbcType="VARCHAR" />
+        <result column="level2" property="level2" jdbcType="VARCHAR" />
+        <result column="level3" property="level3" jdbcType="VARCHAR" />
+        <result column="level4" property="level4" jdbcType="VARCHAR"/>
+        <result column="entity_name" property="entity_name" jdbcType="VARCHAR"/>
+        <result column="similar_words" property="similar_words" jdbcType="VARCHAR" />
+        <result column="status_flag" property="status_flag" jdbcType="BIT" />
+        <result column="user" property="user" jdbcType="VARCHAR" />
+        <result column="created_at" property="created_at" jdbcType="TIMESTAMP"/>
     </resultMap>
+
+    <update id="update" parameterType="com.changhong.semanticmanage.entity.Synonym">
+        update synonym
+        <set>
+            <if test="level1 != null">
+                level1 = #{level1},
+            </if>
+            <if test="level2 != null">
+                level2 = #{level2},
+            </if>
+            <if test="level3 != null">
+                level3 = #{level3},
+            </if>
+            <if test="level4 != null">
+                level4 = #{level4},
+            </if>
+            <if test="entity_name != null">
+                entity_name = #{entity_name},
+            </if>
+            <if test="similar_words != null">
+                similar_words = #{similar_words},
+            </if>
+            <if test="status_flag != null">
+                status_flag = #{status_flag},
+            </if>
+            <if test="user != null">
+                user = #{user},
+            </if>
+            <if test="created_at != null">
+                created_at = #{created_at},
+            </if>
+        </set>
+        where entity_name = #{entity_name}
+    </update>
+
 </mapper>

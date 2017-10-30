@@ -6,6 +6,7 @@ import com.changhong.semanticmanage.entity.PageBean;
 import com.changhong.semanticmanage.entity.Semantic;
 import com.changhong.semanticmanage.entity.Synonym;
 import com.changhong.semanticmanage.service.SemanticService;
+import com.changhong.semanticmanage.service.SynonymService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -23,6 +24,9 @@ import java.util.List;
 public class SemanticController {
     @Autowired
     SemanticService semanticService;
+    @Autowired
+    SynonymService synonymService;
+
     @RequestMapping(value = "/query")
     public RestResult<PageBean<Semantic>> getSemanticPage(@RequestParam(value = "page",defaultValue = "1")Integer page, @RequestParam(value = "day", required=false)Integer day, @RequestParam(value = "state", required=false)Integer state, @RequestParam(value = "method", required=false)String method, @RequestParam(value = "type", required=false)String type){
         Semantic s = new Semantic();
@@ -50,6 +54,9 @@ public class SemanticController {
         semantic.setId(id);
         semantic.setState(state);
         Synonym synonym = new Synonym();
+        synonym.setEntity_name(query);
+        synonym.setSimilar_words(spellCheck);
+        synonymService.update(synonym);
         semanticService.update(semantic);
         return RestResultGenerator.genSuccessResult();
     }
@@ -69,7 +76,10 @@ public class SemanticController {
         semantic.setId(id);
         semantic.setState(state);
         Synonym synonym = new Synonym();
+        synonym.setEntity_name(query);
+        synonym.setSimilar_words(spellCheck);
         semanticService.update(semantic);
+        synonymService.update(synonym);
         return RestResultGenerator.genSuccessResult();
     }
 

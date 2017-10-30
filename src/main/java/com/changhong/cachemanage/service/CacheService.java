@@ -40,7 +40,7 @@ public class CacheService {
         PageBean<Cache> pageBean = new PageBean<Cache>();
         int page = cache.getPageNo();
         pageBean.setPage(page);
-        int limit = 5;
+        int limit = 30;
         pageBean.setLimit(limit);
         int totalCount = 0;
         totalCount = cacheMapper.getCacheCount();

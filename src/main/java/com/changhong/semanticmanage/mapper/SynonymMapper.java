@@ -1,5 +1,6 @@
 package com.changhong.semanticmanage.mapper;
 
+import com.changhong.semanticmanage.entity.Synonym;
 import org.apache.ibatis.annotations.Mapper;
 import org.springframework.stereotype.Repository;
 
@@ -8,5 +9,6 @@ import org.springframework.stereotype.Repository;
  */
 @Repository
 @Mapper
-public class SynonymMapper {
+public interface SynonymMapper {
+    public void update(Synonym synonym);
 }

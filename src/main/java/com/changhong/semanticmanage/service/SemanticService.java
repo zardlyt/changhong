@@ -20,7 +20,7 @@ public class SemanticService {
         PageBean<Semantic> pageBean = new PageBean<Semantic>();
         int page = semantic.getPageNo();
         pageBean.setPage(page);
-        int limit = 10;
+        int limit = 30;
         pageBean.setLimit(limit);
         int totalCount = 0;
         totalCount = semanticMapper.getSemanticCount(semantic);
