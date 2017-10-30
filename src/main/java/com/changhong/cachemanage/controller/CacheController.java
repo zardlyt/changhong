@@ -25,17 +25,12 @@ public class CacheController {
     @Autowired
     CacheService cacheService;
     @RequestMapping(value = "/custom/query")
-    public RestResult<PageBean<Cache>> getCachePage(@RequestParam(value="page",required=false,defaultValue = "1") Integer page){
+    public RestResult<PageBean<Cache>> getCachePage(@RequestParam(value="page",required=false,defaultValue = "1") Integer page,@RequestParam(value="quiz", required=false) String quiz){
         Cache cache = new Cache();
         cache.setPageNo(page);
+        cache.setQuiz(quiz);
         PageBean<Cache> pageBean = cacheService.getCachePage(cache);
         return RestResultGenerator.genSuccessResult(pageBean);
-    }
-
-    @RequestMapping(value = "/custom/search")
-    public RestResult<Cache> getSearch(@RequestParam(value="quiz",required=false) String quiz){
-        Cache cache = new Cache();
-        return RestResultGenerator.genSuccessResult(cache);
     }
 
     @RequestMapping(value = "/custom/edit")

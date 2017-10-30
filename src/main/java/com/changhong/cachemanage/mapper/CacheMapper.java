@@ -15,7 +15,7 @@ public interface CacheMapper {
 
     public List<Cache> getCachePage(Cache cache);
 
-    public int getCacheCount();
+    public int getCacheCount(Cache cache);
 
     public List<Cache> getAll();
 
