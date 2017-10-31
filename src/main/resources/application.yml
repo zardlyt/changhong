@@ -9,9 +9,7 @@ spring:
       prefix: /WEB-INF/views/
       suffix: .jsp
 mybatis:
-  config-locations: classpath:mybatis/mybatis-config.xml
   mapper-locations: classpath:mybatis/mapper/*.xml
-
 
 
 jedis:
