@@ -38,6 +38,15 @@ public class JsonUtils {
     }
 
     /**
+     * 将JSON格式的String转为JSON
+     * @param jsonString
+     * @return
+     */
+    public static JSONObject stringToJson(String jsonString){
+        return JSONObject.fromObject(jsonString);
+    }
+
+    /**
      * 把Object转换成Json字符串
      * @param object
      * @return
@@ -131,6 +140,22 @@ public class JsonUtils {
     }
 
     /**
+     * 根据Class把Json字符串转换成指定类型,针对复合类型，使用暗示将复合类型解析
+     * @param jsonString
+     * @param clazz
+     * @param classMap
+     * @return
+     */
+    @SuppressWarnings("unchecked")
+    public static <T> T toBean(String jsonString,Class<T> clazz,Map<String, Class<?>> classMap){
+        if(null == jsonString){
+            return null;
+        }
+        JSONObject jsonObj = JSONObject.fromObject(jsonString);
+        return (T) JSONObject.toBean(jsonObj,clazz,classMap);
+    }
+
+    /**
      * 根据Class将json字符串转换成指定泛型的List集合
      * @param jsonString
      * @param clazz
@@ -158,30 +183,7 @@ public class JsonUtils {
         return (T[]) JSONArray.toArray(JSONArray.fromObject(jsonString),clazz);
     }
 
-    /**
-     * 根据Class把Json字符串转换成指定类型,针对复合类型，使用暗示将复合类型解析
-     * @param jsonString
-     * @param clazz
-     * @param classMap
-     * @return
-     */
-    @SuppressWarnings("unchecked")
-    public static <T> T toBean(String jsonString,Class<T> clazz,Map<String, Class<?>> classMap){
-        if(null == jsonString){
-            return null;
-        }
-        JSONObject jsonObj = JSONObject.fromObject(jsonString);
-        return (T) JSONObject.toBean(jsonObj,clazz,classMap);
-    }
 
-    /**
-     * 将JSON格式的String转为JSON
-     * @param jsonString
-     * @return
-     */
-    public static JSONObject stringToJson(String jsonString){
-        return JSONObject.fromObject(jsonString);
-    }
 
     /**
      * 数据提取

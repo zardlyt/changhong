@@ -9,12 +9,14 @@ import com.changhong.semanticmanage.service.SemanticService;
 import com.changhong.semanticmanage.service.SynonymService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.sql.Timestamp;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by Administrator on 2017/10/18.
@@ -28,59 +30,46 @@ public class SemanticController {
     SynonymService synonymService;
 
     @RequestMapping(value = "/query")
-    public RestResult<PageBean<Semantic>> getSemanticPage(@RequestParam(value = "page",defaultValue = "1")Integer page, @RequestParam(value = "day", required=false)Integer day, @RequestParam(value = "state", required=false)Integer state, @RequestParam(value = "method", required=false)String method, @RequestParam(value = "type", required=false)String type){
-        Semantic s = new Semantic();
-        s.setState(state);
-        s.setMethod(method);
-        s.setStype(type);
-        s.setPageNo(page);
-        s.setDay(day);
-        PageBean<Semantic> pageBean = semanticService.getSemanticPage(s);
+    public RestResult<PageBean<Semantic>> getSemanticPage(@RequestBody Semantic semantic){
+        PageBean<Semantic> pageBean = semanticService.getSemanticPage(semantic);
         return RestResultGenerator.genSuccessResult(pageBean);
     }
 
     @RequestMapping(value = "/annul")
-    public RestResult annul(@RequestParam(value = "state",required=false)Integer state,@RequestParam(value = "id",required=false,defaultValue = "1")Integer id){
-        Semantic semantic = new Semantic();
-        semantic.setState(state);
-        semantic.setId(id);
+    public RestResult annul(@RequestBody Semantic semantic){
         semanticService.update(semantic);
         return RestResultGenerator.genSuccessResult();
     }
 
     @RequestMapping(value = "/examine")
-    public RestResult examine(@RequestParam(value = "state",required=false)Integer state,@RequestParam(value = "id",required=false,defaultValue = "1")Integer id,@RequestParam(value = "spellCheck",required=false)String spellCheck,@RequestParam(value = "query",required=false)String query){
+    public RestResult examine(@RequestBody Map map){
         Semantic semantic = new Semantic();
-        semantic.setId(id);
-        semantic.setState(state);
+        semantic.setId((Integer) map.get("id"));
+        semantic.setState((Integer) map.get("state"));
         Synonym synonym = new Synonym();
-        synonym.setEntity_name(query);
-        synonym.setSimilar_words(spellCheck);
+        synonym.setEntity_name((String) map.get("query"));
+        synonym.setSimilar_words((String) map.get("spellCheck"));
         synonymService.update(synonym);
         semanticService.update(semantic);
         return RestResultGenerator.genSuccessResult();
     }
 
     @RequestMapping(value = "/ignore")
-    public RestResult ignore(@RequestParam(value = "state",required=false)Integer state,@RequestParam(value = "id",required=false,defaultValue = "1")Integer id){
-        Semantic semantic = new Semantic();
-        semantic.setState(state);
-        semantic.setId(id);
+    public RestResult ignore(@RequestBody Semantic semantic){
         semanticService.update(semantic);
         return RestResultGenerator.genSuccessResult();
     }
 
     @RequestMapping(value = "/add")
-    public RestResult add(@RequestParam(value = "state",required=false)Integer state,@RequestParam(value = "id",required=false,defaultValue = "1")Integer id,@RequestParam(value = "spellCheck",required=false)String spellCheck,@RequestParam(value = "query",required=false)String query){
+    public RestResult add(@RequestBody Map map){
         Semantic semantic = new Semantic();
-        semantic.setId(id);
-        semantic.setState(state);
+        semantic.setId((Integer) map.get("id"));
+        semantic.setState((Integer) map.get("state"));
         Synonym synonym = new Synonym();
-        synonym.setEntity_name(query);
-        synonym.setSimilar_words(spellCheck);
+        synonym.setEntity_name((String) map.get("query"));
+        synonym.setSimilar_words((String) map.get("spellCheck"));
         semanticService.update(semantic);
         synonymService.update(synonym);
         return RestResultGenerator.genSuccessResult();
     }
-
 }

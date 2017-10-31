@@ -7,14 +7,18 @@ import com.changhong.exceptionhandle.RestResult;
 import com.changhong.exceptionhandle.RestResultGenerator;
 import com.changhong.semanticmanage.entity.PageBean;
 import com.changhong.semanticmanage.entity.Semantic;
+import com.changhong.utils.JsonUtils;
+import net.sf.json.util.JSONUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by Administrator on 2017/10/18.
@@ -25,51 +29,35 @@ public class CacheController {
     @Autowired
     CacheService cacheService;
     @RequestMapping(value = "/custom/query")
-    public RestResult<PageBean<Cache>> getCachePage(@RequestParam(value="page",required=false,defaultValue = "1") Integer page,@RequestParam(value="quiz", required=false) String quiz){
-        Cache cache = new Cache();
-        cache.setPageNo(page);
-        cache.setQuiz(quiz);
+    public RestResult<PageBean<Cache>> getCachePage(@RequestBody Cache cache){
         PageBean<Cache> pageBean = cacheService.getCachePage(cache);
         return RestResultGenerator.genSuccessResult(pageBean);
     }
 
-    @RequestMapping(value = "/custom/edit")
-    public RestResult<Cache> getOne(@RequestParam(value="id",required=false,defaultValue = "1") Integer id){
-        Cache cache = cacheService.getOne(id);
-        return RestResultGenerator.genSuccessResult(cache);
-    }
-
     @RequestMapping(value = "/custom/delete")
-    public RestResult delete(@RequestParam(value="id",required=false,defaultValue = "1") Integer id){
-        cacheService.delete(id);
+    public RestResult delete(@RequestBody Cache cache){
+        cacheService.delete(cache.getId());
         return RestResultGenerator.genSuccessResult();
     }
 
     @RequestMapping(value = "/custom/update")
-    public RestResult update(@RequestParam(value="id",required=false,defaultValue = "1") Integer id,@RequestParam(value="quiz", required=false) String quiz,@RequestParam(value="answer", required=false) String answer){
-        Cache cache = new Cache();
-        cache.setQuiz(quiz);
-        cache.setAnswer(answer);
-        cache.setId(id);
+    public RestResult update(@RequestBody Cache cache){
         cacheService.update(cache);
         return RestResultGenerator.genSuccessResult();
     }
 
     @RequestMapping(value = "/custom/insert")
-    public RestResult insert(@RequestParam(value="quiz", required=false) String quiz,@RequestParam(value="answer", required=false) String answer){
-        Cache cache = new Cache();
-        cache.setQuiz(quiz);
-        cache.setAnswer(answer);
+    public RestResult insert(@RequestBody Cache cache){
         cacheService.insert(cache);
         return RestResultGenerator.genSuccessResult();
     }
 
     @RequestMapping(value = "/custom/upload")
     public RestResult upload(@RequestParam(value = "upfile", required=false) MultipartFile file){
-        //if(file==null) return null;
+        if(file==null) return null;
         String name = file.getOriginalFilename();
         long size = file.getSize();
-        //if(name==null || ("").equals(name) && size==0) return null;
+        if(name==null || ("").equals(name) && size==0) return null;
         cacheService.upload(file);
         return RestResultGenerator.genSuccessResult();
     }
@@ -81,14 +69,14 @@ public class CacheController {
     }
 
     @RequestMapping(value = "/log/delete")
-    public RestResult logDelete(@RequestParam(value = "key", required=false)String key){
-        cacheService.logDelete(key);
+    public RestResult logDelete(@RequestBody Map map){
+        cacheService.logDelete((String) map.get("key"));
         return RestResultGenerator.genSuccessResult();
     }
 
     @RequestMapping(value = "/log/query")
-    public RestResult<Cache> logQurey(@RequestParam(value="key", required=false) String key){
-        Cache cache = cacheService.logQuery(key);
+    public RestResult<Cache> logQurey(@RequestBody Map map){
+        Cache cache = cacheService.logQuery((String) map.get("key"));
         return RestResultGenerator.genSuccessResult(cache);
     }
 }
