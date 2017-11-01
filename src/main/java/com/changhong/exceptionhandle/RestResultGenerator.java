@@ -36,6 +36,14 @@ public class RestResultGenerator {
     }
 
     /**
+     * success no message
+     * @return
+     */
+    public static RestResult genSuccessResult() {
+        return genSuccessResult(null);
+    }
+
+    /**
      * error message
      * @param message error message
      * @param <T>
@@ -57,11 +65,4 @@ public class RestResultGenerator {
         return genErrorResult(error.getMessage());
     }*/
 
-    /**
-     * success no message
-     * @return
-     */
-    public static RestResult genSuccessResult() {
-        return genSuccessResult(null);
-    }
 }

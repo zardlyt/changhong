@@ -9,6 +9,7 @@ import com.changhong.semanticmanage.entity.PageBean;
 import com.changhong.semanticmanage.entity.Semantic;
 import com.changhong.utils.JsonUtils;
 import net.sf.json.util.JSONUtils;
+import org.apache.poi.ss.usermodel.Workbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -17,6 +18,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.net.URLEncoder;
 import java.util.List;
 import java.util.Map;
 
@@ -53,12 +58,21 @@ public class CacheController {
     }
 
     @RequestMapping(value = "/custom/upload")
-    public RestResult upload(@RequestParam(value = "upfile", required=false) MultipartFile file){
-        if(file==null) return null;
+    public RestResult upload(@RequestParam(value = "upfile", required=false) MultipartFile file) throws IOException {
+        if(file==null) return RestResultGenerator.genErrorResult("请上传文件");
         String name = file.getOriginalFilename();
         long size = file.getSize();
-        if(name==null || ("").equals(name) && size==0) return null;
-        cacheService.upload(file);
+        if(name==null || ("").equals(name) && size==0) return RestResultGenerator.genErrorResult("请上传文件");
+        return cacheService.upload(file);
+    }
+
+    @RequestMapping(value = "/custom/download")
+    public RestResult download(HttpServletResponse response) throws IOException {
+        Workbook wb = cacheService.download();
+        String fileName = URLEncoder.encode("自定义缓存.xls", "utf-8");
+        response.setHeader("Content-disposition", "attachment;filename="+fileName);
+        OutputStream os = response.getOutputStream();
+        wb.write(os);
         return RestResultGenerator.genSuccessResult();
     }
 

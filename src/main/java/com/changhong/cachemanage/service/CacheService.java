@@ -3,6 +3,8 @@ package com.changhong.cachemanage.service;
 import com.changhong.cachemanage.entity.Cache;
 import com.changhong.cachemanage.entity.PageInfo;
 import com.changhong.cachemanage.mapper.CacheMapper;
+import com.changhong.exceptionhandle.RestResult;
+import com.changhong.exceptionhandle.RestResultGenerator;
 import com.changhong.redis.RedisUtil;
 import com.changhong.semanticmanage.entity.PageBean;
 import com.changhong.semanticmanage.entity.Semantic;
@@ -10,7 +12,11 @@ import com.changhong.semanticmanage.mapper.SemanticMapper;
 import com.changhong.utils.JsonUtils;
 import net.sf.json.util.JSONUtils;
 import org.apache.commons.collections.map.HashedMap;
+import org.apache.poi.hssf.usermodel.HSSFRow;
+import org.apache.poi.hssf.usermodel.HSSFSheet;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFCell;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
@@ -76,30 +82,55 @@ public class CacheService {
         cacheMapper.update(cache);
     }
 
-    public void upload(MultipartFile file){
+    public RestResult upload(MultipartFile file) throws IOException {
+        boolean b = false;
         InputStream in = null;
         XSSFWorkbook workbook = null;
-        try {
-            in = file.getInputStream();
-            workbook = new XSSFWorkbook(in);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        in = file.getInputStream();
+        workbook = new XSSFWorkbook(in);
         XSSFSheet sheet = workbook.getSheetAt(0);
         XSSFRow row = null;
         XSSFCell cell = null;
         int rowNum = sheet.getLastRowNum();
-        for(int i = 0;i<rowNum;i++) {
+        List<Cache> list = new ArrayList<Cache>();
+        for(int i = 1;i<=rowNum;i++) {
             row = sheet.getRow(i);
-            Cell quiz = row.getCell(0);
-            Cell answer = row.getCell(1);
-            String nquiz = quiz==null?null:quiz.getStringCellValue();
-            String nanswer = answer==null?null:answer.getStringCellValue();
-            Cache cache = new Cache();
-            cache.setQuiz(nquiz);
-            cache.setAnswer(nanswer);
-            cacheMapper.insert(cache);
+            if(row!=null){
+                Cell quiz = row.getCell(0);
+                Cell answer = row.getCell(1);
+                if(quiz!=null&&answer!=null) {
+                    String nquiz = quiz.getStringCellValue();
+                    String nanswer = answer.getStringCellValue();
+                    Cache cache = new Cache();
+                    cache.setQuiz(nquiz);
+                    cache.setAnswer(nanswer);
+                    list.add(cache);
+                }else{
+                    b = true;
+                    break;
+                }
+            }else {
+                b = true;
+                break;
+            }
         }
+        if(b==false){
+            for(Cache li:list){
+                cacheMapper.insert(li);
+            }
+            return RestResultGenerator.genSuccessResult();
+        }else{
+            return RestResultGenerator.genErrorResult("问法和回答不能为空");
+        }
+    }
+
+    public Workbook download(){
+        XSSFWorkbook wb = new XSSFWorkbook();
+        XSSFSheet sheet = wb.createSheet("自定义缓存");
+        XSSFRow row = sheet.createRow(0);
+        row.createCell(0).setCellValue("问法");
+        row.createCell(1).setCellValue("回答");
+        return  wb;
     }
 
     public void deleteAll(){
@@ -126,10 +157,13 @@ public class CacheService {
     public Cache logQuery(String key){
         String quiz = "semantic:"+key+"5a200ce8e6ec3a6506030e54ac3b970e";
         String answer = redisUtil.get(quiz);
-        Cache cache = new Cache();
-        cache.setQuiz(key);
-        cache.setAnswer(answer);
-        return cache;
+        if(answer!=null){
+            Cache cache = new Cache();
+            cache.setQuiz(key);
+            cache.setAnswer(answer);
+            return cache;
+        }
+        return null;
     }
 }
 /*Long count = redisUtil.llen("semantic");

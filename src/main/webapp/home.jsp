@@ -15,7 +15,7 @@
             $('#btn').click(function(){
                 if(checkData()){
                     $('#form1').ajaxSubmit({
-                        url:'/cache/upload',
+                        url:'/cache/custom/upload',
                         dataType: 'text',
                         success: resutlMsg,
                         error: errorMsg
@@ -50,7 +50,7 @@
 
 <body>
 <div>1.通过简单的form表单提交方式，进行文件的上</br> 2.通过jquery.form.js插件提供的form表单一步提交功能 </div></br>
-<form method="POST"  enctype="multipart/form-data" id="form1" action="/cache/upload">
+<form method="POST"  enctype="multipart/form-data" id="form1" action="/cache/custom/upload">
     <table>
         <tr>
             <td>上传文件: </td>
