@@ -36,9 +36,7 @@ public class ZujianTask {
         Date date = new Date();
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         String sDate = formatter.format(date);//当前时间
-        System.out.println(sDate);
         String sYeDate = addDateOneMinute(sDate, -5);//五分钟之前
-        System.out.println(sYeDate);
         String sdate = dateToStamp(sDate);
         String syedate = dateToStamp(sYeDate);
         String start_time = syedate.substring(0,10);
