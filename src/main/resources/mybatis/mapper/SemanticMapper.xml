@@ -37,6 +37,7 @@
                 AND DATE_SUB(CURDATE(), INTERVAL #{day} DAY) &lt;= DATE(stime)
             </if>
         </where>
+        ORDER BY state ASC
         limit #{begin},#{limit}
     </select>
 

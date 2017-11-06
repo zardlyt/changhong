@@ -37,6 +37,22 @@ public class JsonUtils {
         return map;
     }
 
+
+    /**
+     * 根据Class将json字符串转换成指定泛型的List集合
+     * @param jsonString
+     * @param clazz
+     * @return
+     */
+    @SuppressWarnings("unchecked")
+    public static <T> List<T> toList(String jsonString, Class<Map> clazz){
+        if(null == jsonString){
+            return null;
+        }
+        return (List<T>) JSONArray.toCollection(JSONArray.fromObject(jsonString),clazz);
+    }
+
+
     /**
      * 将JSON格式的String转为JSON
      * @param jsonString
@@ -153,20 +169,6 @@ public class JsonUtils {
         }
         JSONObject jsonObj = JSONObject.fromObject(jsonString);
         return (T) JSONObject.toBean(jsonObj,clazz,classMap);
-    }
-
-    /**
-     * 根据Class将json字符串转换成指定泛型的List集合
-     * @param jsonString
-     * @param clazz
-     * @return
-     */
-    @SuppressWarnings("unchecked")
-    public static <T> List<T> toListBean(String jsonString, Class<Map> clazz){
-        if(null == jsonString){
-            return null;
-        }
-        return (List<T>) JSONArray.toCollection(JSONArray.fromObject(jsonString),clazz);
     }
 
     /**
