@@ -1,36 +1,23 @@
 package com.changhong.cachemanage.service;
 
 import com.changhong.cachemanage.entity.Cache;
-import com.changhong.cachemanage.entity.PageInfo;
 import com.changhong.cachemanage.mapper.CacheMapper;
 import com.changhong.exceptionhandle.RestResult;
 import com.changhong.exceptionhandle.RestResultGenerator;
-import com.changhong.redis.RedisUtil;
+import com.changhong.redisconfig.RedisUtil;
 import com.changhong.semanticmanage.entity.PageBean;
-import com.changhong.semanticmanage.entity.Semantic;
-import com.changhong.semanticmanage.mapper.SemanticMapper;
-import com.changhong.utils.JsonUtils;
-import net.sf.json.util.JSONUtils;
-import org.apache.commons.collections.map.HashedMap;
-import org.apache.poi.hssf.usermodel.HSSFRow;
-import org.apache.poi.hssf.usermodel.HSSFSheet;
-import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFCell;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
-import org.apache.tomcat.jni.File;
-import org.json.JSONException;
-import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.UnsupportedEncodingException;
 import java.util.*;
 
 /**
