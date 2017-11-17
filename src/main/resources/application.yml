@@ -16,3 +16,20 @@ jedis:
       maxTotal: 100
       maxIdle: 10
       maxWaitMillis: 100000
+
+kafka:
+  consumer:
+    servers: localhost:9092
+    session.timeout: 6000
+    group.id: zymtest
+    concurrency: 1
+    enable.auto.commit: false
+    auto:
+      commit.interval: 1000
+      offset.reset: latest
+  producer:
+    servers: localhost:9092
+    retries: 0
+    batch.size: 4096
+    linger: 1
+    buffer.memory: 40960
