@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.changhong.requestmanage.mapper.RequestMapper" >
+    <resultMap id="RequestResultMap" type="com.changhong.requestmanage.entity.RequestModel" >
+        <id column="id" property="id" jdbcType="BIGINT"/>
+        <result column="query_mac" property="query_mac" jdbcType="VARCHAR" />
+        <result column="return_intent" property="return_intent" jdbcType="VARCHAR" />
+        <result column="yun_semantic" property="yun_semantic" jdbcType="VARCHAR" />
+        <result column="query_text" property="query_text" jdbcType="VARCHAR"/>
+        <result column="return_domain" property="return_domain" jdbcType="VARCHAR"/>
+        <result column="query_device" property="query_device" jdbcType="VARCHAR" />
+        <result column="return_score" property="return_score" jdbcType="VARCHAR" />
+        <result column="return_semantic" property="return_semantic" jdbcType="VARCHAR" />
+        <result column="time" property="time" jdbcType="TIMESTAMP"/>
+        <result column="extendedfield" property="extendedfield" jdbcType="VARCHAR" />
+        <result column="p_log_date" property="p_log_date" jdbcType="VARCHAR" />
+        <result column="p_log_hour" property="p_log_hour" jdbcType="BIGINT" />
+        <result column="collect" property="collect" jdbcType="BIGINT" />
+        <result column="collect_time" property="collect_time" jdbcType="TIMESTAMP" />
+        <result column="counts" property="counts" jdbcType="BIGINT" />
+    </resultMap>
+
+    <sql id="Base_Column_List" >
+        id, query_mac, return_intent, yun_semantic, query_text, return_domain, query_device, return_score, return_semantic, time, extendedfield, p_log_date, p_log_hour, collect, collect_time
+    </sql>
+
+    <select id="getRequestPage" parameterType="com.changhong.requestmanage.entity.RequestModel" resultMap="RequestResultMap" >
+        SELECT
+        id, query_text, return_semantic, query_mac, time, collect
+        FROM hive_semantic
+        <where>
+            1 = 1
+            <if test="query_text!=null">
+                AND query_text LIKE CONCAT('%',#{query_text},'%')
+            </if>
+        </where>
+        <if test="time!=null">
+            ORDER BY time DESC
+        </if>
+        limit #{begin},#{limit}
+    </select>
+
+    <select id="getRequestCount" parameterType="com.changhong.requestmanage.entity.RequestModel" resultType="Integer">
+        SELECT COUNT(1) FROM hive_semantic
+        <where>
+            1 = 1
+            <if test="query_text!=null">
+                AND query_text LIKE CONCAT('%',#{query_text},'%')
+            </if>
+        </where>
+    </select>
+
+    <update id="updateCollect" parameterType="com.changhong.requestmanage.entity.RequestModel">
+        update hive_semantic
+        <set>
+            <if test="collect != null">
+                collect = #{collect},
+            </if>
+            <if test="collect_time != null">
+                collect_time = #{collect_time},
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+
+    <select id="getCollectPage" parameterType="com.changhong.requestmanage.entity.RequestModel" resultMap="RequestResultMap" >
+        SELECT
+        id, query_text, return_semantic, collect_time, collect
+        FROM hive_semantic
+        <where>
+            collect = 1
+            <if test="query_text!=null">
+                AND query_text LIKE CONCAT('%',#{query_text},'%')
+            </if>
+        </where>
+        <if test="collect_time!=null">
+            ORDER BY collect_time DESC
+        </if>
+        limit #{begin},#{limit}
+    </select>
+
+    <select id="getCollectCount" parameterType="com.changhong.requestmanage.entity.RequestModel" resultType="Integer">
+        SELECT COUNT(1) FROM hive_semantic
+        <where>
+            collect = 1
+            <if test="query_text!=null">
+                AND query_text LIKE CONCAT('%',#{query_text},'%')
+            </if>
+        </where>
+    </select>
+
+    <select id="getMostPage" parameterType="com.changhong.requestmanage.entity.RequestModel" resultMap="RequestResultMap" >
+        SELECT
+        id, query_text, return_semantic, MAX(time) as time, COUNT(query_text) as counts, MAX(collect) as collect
+        FROM hive_semantic
+        <where>
+            1 = 1
+            <if test="query_text!=null">
+                AND query_text LIKE CONCAT('%',#{query_text},'%')
+            </if>
+        </where>
+        GROUP BY query_text
+        ORDER BY count(*) DESC
+        limit #{begin},#{limit}
+    </select>
+
+    <select id="getMostCount" parameterType="com.changhong.requestmanage.entity.RequestModel" resultType="Integer">
+        SELECT COUNT(t.counts) FROM (
+        SELECT COUNT(1) counts FROM hive_semantic
+        <where>
+            1 = 1
+            <if test="query_text!=null">
+                AND query_text LIKE CONCAT('%',#{query_text},'%')
+            </if>
+        </where>
+        GROUP BY query_text) t
+    </select>
+</mapper>
