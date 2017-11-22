@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.changhong.dataanalysis.mapper.DataAnalysisMapper" >
+    <resultMap id="DataAanlysisResultMap" type="com.changhong.dataanalysis.entity.DataCount" >
+        <id column="id" property="id" jdbcType="BIGINT"/>
+        <result column="p_log_date" property="p_log_date" jdbcType="DATE" />
+        <result column="all_domain" property="all_domain" jdbcType="BIGINT" />
+        <result column="video" property="video" jdbcType="BIGINT" />
+        <result column="app" property="app" jdbcType="BIGINT" />
+        <result column="tv" property="tv" jdbcType="BIGINT" />
+        <result column="baike" property="baike" jdbcType="BIGINT" />
+        <result column="talk" property="talk" jdbcType="BIGINT" />
+        <result column="music" property="music" jdbcType="BIGINT" />
+    </resultMap>
+
+    <sql id="Base_Column_List" >
+        id, p_log_date, all_domain, video, app, tv, baike, talk, music
+    </sql>
+
+    <select id="getDataAnalysisMonth" parameterType="com.changhong.dataanalysis.entity.DataCount" resultMap="DataAanlysisResultMap" >
+        SELECT
+            <trim suffixOverrides=",">
+                id, p_log_date,
+                <if test="all_domain!=null">
+                    all_domain,
+                </if>
+                <if test="video!=null">
+                    video,
+                </if>
+                <if test="app!=null">
+                    app,
+                </if>
+                <if test="tv!=null">
+                    tv,
+                </if>
+                <if test="baike!=null">
+                    baike,
+                </if>
+                <if test="talk!=null">
+                    talk,
+                </if>
+                <if test="music!=null">
+                    music,
+                </if>
+            </trim>
+        FROM data_count
+        <where>
+                DATE_SUB(CURDATE(), INTERVAL 30 DAY) &lt;= DATE(p_log_date)
+        </where>
+    </select>
+
+    <select id="getDataAnalysisDay" parameterType="com.changhong.dataanalysis.entity.DataCount" resultMap="DataAanlysisResultMap" >
+        SELECT
+        <include refid="Base_Column_List" />
+        FROM data_count
+        <where>
+            DATE_SUB(CURDATE(), INTERVAL 5 DAY) &lt;= DATE(p_log_date)
+        </where>
+    </select>
+
+    <select id="getDataAnalysisCount"  resultMap="DataAanlysisResultMap" >
+        SELECT
+        sum(video) AS video, sum(app) AS app, sum(baike) AS baike, sum(tv) tv
+        FROM data_count
+    </select>
+</mapper>
