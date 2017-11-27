@@ -13,7 +13,7 @@
         <result column="return_semantic" property="return_semantic" jdbcType="VARCHAR" />
         <result column="time" property="time" jdbcType="TIMESTAMP"/>
         <result column="extendedfield" property="extendedfield" jdbcType="VARCHAR" />
-        <result column="p_log_date" property="p_log_date" jdbcType="VARCHAR" />
+        <result column="p_log_date" property="p_log_date" jdbcType="DATE" />
         <result column="p_log_hour" property="p_log_hour" jdbcType="BIGINT" />
         <result column="collect" property="collect" jdbcType="BIGINT" />
         <result column="collect_time" property="collect_time" jdbcType="TIMESTAMP" />
@@ -114,5 +114,48 @@
             </if>
         </where>
         GROUP BY query_text) t
+    </select>
+
+    <select id="getTypeCount" parameterType="String" resultType="java.util.Map" >
+        SELECT
+        return_domain, COUNT(return_domain) as counts
+        FROM hive_semantic
+        <where>
+            1 = 1
+            <if test="_parameter!=null">
+                AND p_log_date = #{_parameter}
+            </if>
+        </where>
+        GROUP BY return_domain
+    </select>
+
+    <select id="getUserCount" resultType="Long" >
+        SELECT
+        COUNT(DISTINCT(query_mac))
+        FROM hive_semantic
+    </select>
+
+    <select id="getYesUserCount" parameterType="String" resultType="Long" >
+        SELECT
+        COUNT(DISTINCT(query_mac))
+        FROM hive_semantic
+        <where>
+            1 = 1
+            <if test="_parameter!=null">
+                AND p_log_date &lt; #{_parameter}
+            </if>
+        </where>
+    </select>
+
+    <select id="getToaUserCount" parameterType="String" resultType="Long" >
+        SELECT
+        COUNT(query_mac)
+        FROM hive_semantic
+        <where>
+            1 = 1
+            <if test="_parameter!=null">
+                AND p_log_date = #{_parameter}
+            </if>
+        </where>
     </select>
 </mapper>

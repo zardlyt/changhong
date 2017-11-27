@@ -17,4 +17,6 @@ public interface DataAnalysisMapper {
     public List<DataCount> getDataAnalysisDay(DataCount dataCount);
 
     public DataCount getDataAnalysisCount();
+
+    public void insert(DataCount dataCount);
 }

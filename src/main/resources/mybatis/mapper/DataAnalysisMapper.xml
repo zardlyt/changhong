@@ -63,4 +63,61 @@
         sum(video) AS video, sum(app) AS app, sum(baike) AS baike, sum(tv) tv
         FROM data_count
     </select>
+
+    <insert id="insert" parameterType="com.changhong.dataanalysis.entity.DataCount" >
+        INSERT INTO
+        data_count
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="p_log_date != null">
+                p_log_date,
+            </if>
+            <if test="all_domain != null">
+                all_domain,
+            </if>
+            <if test="video != null">
+                video,
+            </if>
+            <if test="app != null">
+                app,
+            </if>
+            <if test="tv != null">
+                tv,
+            </if>
+            <if test="baike != null">
+                baike,
+            </if>
+            <if test="talk != null">
+                talk,
+            </if>
+            <if test="music != null">
+                music,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="p_log_date != null">
+                #{p_log_date},
+            </if>
+            <if test="all_domain != null">
+                #{all_domain},
+            </if>
+            <if test="video != null">
+                #{video},
+            </if>
+            <if test="app != null">
+                #{app},
+            </if>
+            <if test="tv != null">
+                #{tv},
+            </if>
+            <if test="baike != null">
+                #{baike},
+            </if>
+            <if test="talk != null">
+                #{talk},
+            </if>
+            <if test="music != null">
+                #{music},
+            </if>
+        </trim>
+    </insert>
 </mapper>

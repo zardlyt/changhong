@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.changhong.useranalysis.mapper.UserAnalysisMapper" >
+    <resultMap id="UserAanlysisResultMap" type="com.changhong.useranalysis.entity.UserCount" >
+        <id column="id" property="id" jdbcType="BIGINT"/>
+        <result column="p_log_date" property="p_log_date" jdbcType="DATE" />
+        <result column="all_user" property="all_user" jdbcType="BIGINT" />
+        <result column="newly_user" property="newly_user" jdbcType="BIGINT" />
+        <result column="active_user" property="active_user" jdbcType="BIGINT" />
+    </resultMap>
+
+    <sql id="Base_Column_List" >
+        id, p_log_date, all_user, newly_user, active_user
+    </sql>
+
+    <select id="getUserAnalysisMonth"  resultMap="UserAanlysisResultMap" >
+        SELECT
+        <include refid="Base_Column_List" />
+        FROM user_count
+        <where>
+            DATE_SUB(CURDATE(), INTERVAL 30 DAY) &lt;= DATE(p_log_date)
+        </where>
+    </select>
+
+    <insert id="insert" parameterType="com.changhong.useranalysis.entity.UserCount" >
+        INSERT INTO
+        user_count
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="p_log_date != null">
+                p_log_date,
+            </if>
+            <if test="all_user != null">
+                all_user,
+            </if>
+            <if test="newly_user != null">
+                newly_user,
+            </if>
+            <if test="active_user != null">
+                active_user,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="p_log_date != null">
+                #{p_log_date},
+            </if>
+            <if test="all_user != null">
+                #{all_user},
+            </if>
+            <if test="newly_user != null">
+                #{newly_user},
+            </if>
+            <if test="active_user != null">
+                #{active_user},
+            </if>
+        </trim>
+    </insert>
+</mapper>

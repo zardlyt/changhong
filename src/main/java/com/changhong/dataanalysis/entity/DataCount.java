@@ -8,13 +8,13 @@ import java.util.Date;
 public class DataCount {
     private Integer id;
     private Date p_log_date;
-    private Integer all_domain;
-    private Integer video;
-    private Integer app;
-    private Integer tv;
-    private Integer baike;
-    private Integer talk;
-    private Integer music;
+    private Long all_domain;
+    private Long video;
+    private Long app;
+    private Long tv;
+    private Long baike;
+    private Long talk;
+    private Long music;
 
     public Integer getId() {
         return id;
@@ -32,59 +32,59 @@ public class DataCount {
         this.p_log_date = p_log_date;
     }
 
-    public Integer getAll_domain() {
+    public Long getAll_domain() {
         return all_domain;
     }
 
-    public void setAll_domain(Integer all_domain) {
+    public void setAll_domain(Long all_domain) {
         this.all_domain = all_domain;
     }
 
-    public Integer getApp() {
+    public Long getApp() {
         return app;
     }
 
-    public void setApp(Integer app) {
+    public void setApp(Long app) {
         this.app = app;
     }
 
-    public Integer getTv() {
+    public Long getTv() {
         return tv;
     }
 
-    public void setTv(Integer tv) {
+    public void setTv(Long tv) {
         this.tv = tv;
     }
 
-    public Integer getBaike() {
+    public Long getBaike() {
         return baike;
     }
 
-    public void setBaike(Integer baike) {
+    public void setBaike(Long baike) {
         this.baike = baike;
     }
 
-    public Integer getTalk() {
+    public Long getTalk() {
         return talk;
     }
 
-    public void setTalk(Integer talk) {
+    public void setTalk(Long talk) {
         this.talk = talk;
     }
 
-    public Integer getMusic() {
+    public Long getMusic() {
         return music;
     }
 
-    public void setMusic(Integer music) {
+    public void setMusic(Long music) {
         this.music = music;
     }
 
-    public Integer getVideo() {
+    public Long getVideo() {
         return video;
     }
 
-    public void setVideo(Integer video) {
+    public void setVideo(Long video) {
         this.video = video;
     }
 }
